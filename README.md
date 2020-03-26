@@ -1,6 +1,6 @@
 # EthoVision_Helper
 
-This script contains a collection of functions designed to put EthoVision tracks into a more usable format for further data analysis. This includes extracting data and metadata and writing them out as separate csv files, as well as interpolating and smoothing if needed. Some functions are called by others.
+This script contains a collection of functions designed to put EthoVision tracks into a more usable format for further data analysis. This includes extracting data and metadata and writing them out as separate csv files, as well as interpolating and smoothing if needed. Also contains a function for reading in the preprocessed data and preparing it for further analyses (e. g. by putting tracks of several subjects in one dataframe).
 
 ## Typical use   
 ```
