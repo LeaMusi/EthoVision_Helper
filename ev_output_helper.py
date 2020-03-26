@@ -134,6 +134,10 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
     '''
     import glob
     import numpy as np
+    import os
+    
+    if not os.path.exists(rawfilepath+"preprocessed_tracks/"):
+        os.makedirs(rawfilepath+"preprocessed_tracks/")
     
     if smoothe_all or extract_all_unsmoothed:
         datfiles=glob.glob(rawfilepath+"*Trial*.xlsx")
