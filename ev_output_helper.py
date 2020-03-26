@@ -4,6 +4,9 @@
 Created Mar 2020
 
 @author: %Lea Musiolek
+
+
+This tool is shared under the GNU General Public License v3.0 or later.
 """
 
 
