@@ -34,4 +34,4 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
         
         
         
-This tool is shared under the GNU General Public License v3.0 or later.
+*This tool is shared under the GNU General Public License v3.0 or later.*
