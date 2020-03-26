@@ -1,6 +1,10 @@
 
 def savitzky_golay(y, window_size, order, deriv, rate):
-    r"""Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
+    r"""
+    From
+    Copyright 2015, Various authors Revision 18b940fb
+    
+    Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
     The Savitzky-Golay filter removes high frequency noise from data.
     It has the advantage of preserving the original shape and
     features of the signal better than other types of filtering
