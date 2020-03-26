@@ -64,7 +64,7 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
     if smoothe_all or extract_all_unsmoothed:
         datfiles=glob.glob(rawfilepath+"*Trial*.xlsx")
         print("\nNumber of raw xlsx files:", len(datfiles))
-        header_rows = int(input("How many rows of metadata are there in the raw xlsx file? This means the number of rows before the first header row."))
+        header_rows = int(input("How many rows of metadata are there in the raw xlsx file? \nThis means the number of rows before the first header row. \nEnter here:   "))
         for xlsfile in datfiles:
             for sheet_no in range(0, subjects_per_trial):
                 #print(xlsfile)
@@ -74,7 +74,7 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
                 if smoothe_all:  
                     if (np.isnan(np.array(coord["X center"])).sum() > 0 or np.isnan(np.array(coord["Y center"])).sum() > 0):
-                        print("Cannot smoothe as there are still NaN elements in the tracking data in sheet" + str(sheet_no) + "of " + xlsfile + ".")
+                        print("Cannot smoothe as there are still NaN elements in the tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
                     else:
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
                         coord["Y center"]=sgn.savgol_filter(np.array(coord["Y center"]), window_length=5, polyorder=3, deriv=0)
