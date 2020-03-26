@@ -34,5 +34,5 @@ Numerical Recipes 3rd Edition: The Art of Scientific Computing
 **data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them using **savitzky-golay** or not, then writes them out using **write_out_track**.
 
 **data_initialization:** reads in preprocessed data and metadata, performs rough check for missing frames, 
-        includes tracks of all subjects as columns in same dataframe, takes user-defined independent variables 
+        includes tracks of all subjects as columns in one dataframe, takes user-defined independent variables 
         from metadata and appends them to data as columns (group variables).
