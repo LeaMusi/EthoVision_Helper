@@ -18,20 +18,12 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
 ```
 
 ## Overview of functions:
-**savitzky-golay:** implements a Savitzky-Golay filter for smoothing tracks, returns smoothed tracks as numpy array.  
-References:   
-A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
-       Data by Simplified Least Squares Procedures. Analytical
-       Chemistry, 1964, 36 (8), pp 1627-1639.   
-Numerical Recipes 3rd Edition: The Art of Scientific Computing
-       W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
-       Cambridge University Press ISBN-13: 9780521880688
 
 **read_tracks_excel:** reads tracks from excel file, separates data from metadata and returns them as pandas dataframes. Interpolates with a limit of two consecutive empty cells.
 
 **write_out_track:** writes out smoothed or unsmoothed tracks as well as metadata to csv files.
 
-**data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them using **savitzky-golay** or not, then writes them out using **write_out_track**. Asks for the number of rows of metadata as manual input!
+**data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them or not, then writes them out using **write_out_track**. Asks for the number of rows of metadata as manual input!
 
 **data_initialization:** reads in preprocessed data and metadata, performs rough check for missing frames, 
         includes tracks of all subjects as columns in one dataframe, takes user-defined independent variables 
