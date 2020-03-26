@@ -123,7 +123,7 @@ def write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed):
 
 #%%
 def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subjects_per_trial):
-    ''' Performs preprocessing steps as desired by using read_tracks_excel, savitzky-golay and write_out_track.
+    ''' Performs preprocessing steps as desired by using read_tracks_excel, savitzky-golay and write_out_track. Requires manuel input!
         Parameters:
         rawfilepath             - Directory containing raw EthoVision output files
         smoothe_all             - Boolean of whether to smoothe data or not
@@ -137,8 +137,8 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
     
     if smoothe_all or extract_all_unsmoothed:
         datfiles=glob.glob(rawfilepath+"*Trial*.xlsx")
-        print("\nNumber of unsmoothed xlsx files:", len(datfiles))
-        header_rows = int(input("How many rows make up the header of each unsmoothed xlsx file?"))
+        print("\nNumber of raw xlsx files:", len(datfiles))
+        header_rows = int(input("How many rows of metadata are there in the raw xlsx file? This means the number of rows before the first header row."))
         for xlsfile in datfiles:
             for sheet_no in range(0, subjects_per_trial):
                 #print(xlsfile)
