@@ -4,16 +4,19 @@ This script contains a collection of functions designed to put EthoVision tracks
 
 ## Typical use   
 ```
-# Tell python where to find ev_output_helper.py as well as the raw xlsx output files
+# Tell python where to find ev_output_helper.py as well as the raw xlsx output files:
+
 import sys   
 sys.path.append("Location/of/EthoVision/Helper")   
 rawfilepath = "Location/of/EthoVision/output/files"   
 import ev_output_helper as evoh   
    
-# First extract unsmoothed data as well as smoothe data, for 2 subjects tracked per trial
+# First extract unsmoothed data as well as smoothe data, for 2 subjects tracked per trial:
+
 evoh.data_preprocessing(rawfilepath=rawfilepath, smoothe_all=True, extract_all_unsmoothed=True, subjects_per_trial=2)   
 
-# Then read in, check and prepare data for further analysis
+# Then read in, check and prepare data for further analysis:
+
 dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_data=True, trial_id=i, subjects_per_trial=2)
 ```
 
