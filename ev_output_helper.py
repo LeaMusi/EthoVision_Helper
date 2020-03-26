@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created Mar 2020
+
+@author: %Lea Musiolek
+"""
+
+
+
 
 def read_tracks_excel(xlsfile, no_of_headerrows, sheet_no):
     ''' Reads tracks from excel file. Interpolates all empty coordinate cells.
