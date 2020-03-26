@@ -31,3 +31,7 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
 **data_initialization:** reads in preprocessed data and metadata, performs rough check for missing frames, 
         includes tracks of all subjects as columns in one dataframe, takes user-defined independent variables 
         from metadata and appends them to data as columns (group variables).
+        
+        
+        
+*This tool is shared under the GNU General Public License v3.0 or later.*
