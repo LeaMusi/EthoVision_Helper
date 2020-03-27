@@ -22,12 +22,12 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
 
 ## Overview of functions:
 
-**read_tracks_excel:** reads tracks from excel file, separates data from metadata and returns them as pandas dataframes. Interpolates with a limit of two consecutive empty cells.
+**read_tracks_excel:** reads tracks from excel file, separates data from metadata and returns them as pandas dataframes. Interpolates with a limit of two consecutive empty cells (this can be changed in the code, search for "interpolate").
 
 **write_out_track:** writes out smoothed or unsmoothed tracks as well as metadata to csv files.
 
 **data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them (or not) using a Savitzky-Golay filter, then writes them out using **write_out_track**. Asks for the number of rows of metadata as manual input!
-Filtering parameters are set at a window length of 5 and polynomial of order 3, this can be changed in the code (search for sgn.savgol_filter).
+Filtering parameters are set at a window length of 5 and polynomial of order 3, this can be changed in the code (search for "sgn.savgol_filter").
 
 **data_initialization:** reads in preprocessed data and metadata, performs rough check for missing frames, 
         includes tracks of all subjects as columns in one dataframe, takes user-defined independent variables 
