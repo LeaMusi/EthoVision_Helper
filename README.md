@@ -26,7 +26,8 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
 
 **write_out_track:** writes out smoothed or unsmoothed tracks as well as metadata to csv files.
 
-**data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them or not, then writes them out using **write_out_track**. Asks for the number of rows of metadata as manual input!
+**data_preprocessing:** uses **read_tracks_excel** to read in data, smoothes them (or not) using a Savitzky-Golay filter, then writes them out using **write_out_track**. Asks for the number of rows of metadata as manual input!
+Filtering parameters are set at a window length of 5 and polynomial of order 3, this can be changed in the code (search for sgn.savgol_filter).
 
 **data_initialization:** reads in preprocessed data and metadata, performs rough check for missing frames, 
         includes tracks of all subjects as columns in one dataframe, takes user-defined independent variables 

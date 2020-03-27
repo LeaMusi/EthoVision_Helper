@@ -10,8 +10,6 @@ This tool is shared under the GNU General Public License v3.0 or later.
 """
 
 
-
-
 def read_tracks_excel(xlsfile, no_of_headerrows, sheet_no):
     ''' Reads tracks from excel file. Interpolates all empty coordinate cells.
         Parameters:
