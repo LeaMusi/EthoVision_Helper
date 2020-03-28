@@ -86,7 +86,8 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
                 if smoothe_all:  
                     if len(coord)==0:
-                        print("Cannot smoothe as there is no tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
+                        print("Warning: no tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
+                        write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=True)
                     else:
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
                         coord["Y center"]=sgn.savgol_filter(np.array(coord["Y center"]), window_length=5, polyorder=3, deriv=0)
@@ -133,21 +134,22 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
         else:
             sub_type = "subject"
     
-        #Do rough check of data integrity
+        # If there is tracking data, do rough check of data integrity
         err = False
-        for j in range(0, len(dat)-1):
-            if round(dat.iloc[j]["Trial time"], 3) != round(dat.iloc[j]["Recording time"], 3):
-                print("Subject "+str(i)+sub_type+": Trial time not in sync with recording time, please check!")
-                err = True
-                break
-            framedur = round(dat.iloc[1]["Recording time"]-dat.iloc[0]["Recording time"], 2)
-            if round(dat.iloc[j+1]["Recording time"]-dat.iloc[j]["Recording time"], 2) != framedur:
-                print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing!")  
-                err = True
-                break
+        if len(dat) > 0:
+            for j in range(0, len(dat)-1):
+                if round(dat.iloc[j]["Trial time"], 3) != round(dat.iloc[j]["Recording time"], 3):
+                    print("Subject "+str(i)+sub_type+": Trial time not in sync with recording time, please check!")
+                    err = True
+                    break
+                framedur = round(dat.iloc[1]["Recording time"]-dat.iloc[0]["Recording time"], 2)
+                if round(dat.iloc[j+1]["Recording time"]-dat.iloc[j]["Recording time"], 2) != framedur:
+                    print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing!")  
+                    err = True
+                    break
         
         if err:
-            print("Data contains gaps or frame duration is flawed, please check!")
+            print("Warning: Data contains gaps or frame duration is flawed!")
         else:
             print("Data checked, all clear!")
             dat = dat[['Trial time', 'X center', 'Y center']]
@@ -159,7 +161,7 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
                 ncount0 = len(dat0)
                 ncount = len(dat)
                 if ncount != ncount0:
-                    print("Number of recorded frames strongly diverge between subjects, please check!") 
+                    print("Warning: Number of recorded frames strongly diverge between subjects!") 
                 dat0 = pd.merge(dat0, dat, on="Trialtime")
 
     # Add columns for additional IVs possibly written out in raw file         
