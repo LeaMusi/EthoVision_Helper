@@ -144,7 +144,7 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
                     break
                 framedur = round(dat.iloc[1]["Recording time"]-dat.iloc[0]["Recording time"], 2)
                 if round(dat.iloc[j+1]["Recording time"]-dat.iloc[j]["Recording time"], 2) != framedur:
-                    print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing!")  
+                    print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing in at least one subject's track!")  
                     err = True
                     break
         
