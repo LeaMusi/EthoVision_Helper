@@ -75,7 +75,7 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
     if smoothe_all or extract_all_unsmoothed:
         datfiles=glob.glob(rawfilepath+"*Trial*.xlsx")
         print("\nNumber of raw xlsx files:", len(datfiles))
-        header_rows = int(input("How many rows make up the column headers of the tracking data? This is sometimes more than one row. \nEnter here:   "))
+        header_rows = int(input("User input needed: How many rows make up the column headers of the tracking data? This is sometimes more than one row. \nEnter here:   "))
         for xlsfile in datfiles:
             for sheet_no in range(0, subjects_per_trial):
                 #print(xlsfile)
