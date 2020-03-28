@@ -22,7 +22,7 @@ dat, framedur = evoh.data_initialization(rawfilepath=rawfilepath, use_smoothed_d
 
 ## Overview of functions:
 
-**read_tracks_excel:** reads tracks from excel file, separates data from metadata and returns them as pandas dataframes. Interpolates with a limit of two consecutive empty cells (this can be changed in the code, search for "interpolate").
+**read_tracks_excel:** reads tracks from excel file, separates data from metadata and returns them as pandas dataframes. Interpolates with a limit of five consecutive empty cells (this can be changed in the code, search for "interpolate").
 
 **write_out_track:** writes out smoothed or unsmoothed tracks as well as metadata to csv files.
 

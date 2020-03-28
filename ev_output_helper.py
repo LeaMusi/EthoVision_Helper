@@ -11,7 +11,7 @@ This tool is shared under the GNU General Public License v3.0 or later.
 
 
 def read_tracks_excel(xlsfile, no_of_headerrows, sheet_no):
-    ''' Reads tracks from excel file. Interpolates all empty coordinate cells.
+    ''' Reads tracks from excel file. Interpolates up to 5 consecutive empty coordinate cells.
         Parameters:
         xlsfile             - name of input file as string
         no_of_headerrows    - number of rows that form the data header (sometimes more than 1)
@@ -37,8 +37,8 @@ def read_tracks_excel(xlsfile, no_of_headerrows, sheet_no):
     df = df.drop("index", axis=1)
     
     df=df.replace("-",np.NaN)
-    df["X center"]=df["X center"].astype(float).interpolate(method="linear", axis=0, limit=2)
-    df["Y center"]=df["Y center"].astype(float).interpolate(method="linear", axis=0, limit=2)
+    df["X center"]=df["X center"].astype(float).interpolate(method="linear", axis=0, limit=5)
+    df["Y center"]=df["Y center"].astype(float).interpolate(method="linear", axis=0, limit=5)
     
     return df, metadata
 
@@ -84,7 +84,7 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                 if extract_all_unsmoothed:    
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
                 if smoothe_all:  
-                    if (np.isnan(np.array(coord["X center"])).sum() == len(coord) or np.isnan(np.array(coord["Y center"])).sum() == len(coord)):
+                    if (np.isnan(np.array(coord["X center"])).sum() == len(coord)/0.5 or np.isnan(np.array(coord["Y center"])).sum() == len(coord)/0.5):
                         print("Cannot smoothe as there is no tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
                     else:
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
