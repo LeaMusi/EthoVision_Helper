@@ -80,11 +80,12 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
             for sheet_no in range(0, subjects_per_trial):
                 #print(xlsfile)
                 coord, metadata=read_tracks_excel(xlsfile, header_rows, sheet_no)
+                coord.dropna(axis=0, subset=["X center", "Y center"], inplace=True)
                 outpath = rawfilepath+"preprocessed_tracks/"
                 if extract_all_unsmoothed:    
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
                 if smoothe_all:  
-                    if (np.isnan(np.array(coord["X center"])).sum() == len(coord)/0.5 or np.isnan(np.array(coord["Y center"])).sum() == len(coord)/0.5):
+                    if len(coord)==0:
                         print("Cannot smoothe as there is no tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
                     else:
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
@@ -125,7 +126,6 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
         metafiles = glob.glob(metastart+"* "+str(trial_id)+"sheet_"+str(i)+".csv")
         dat = pd.read_csv(infiles[0], sep="\t", header=0)
         meta = pd.read_csv(metafiles[0], sep="\t", header=None, index_col=0)
-        #dat.dropna(subset=['X center', 'Y center'], inplace=True)
         dat.reset_index(inplace=True)
         dat.drop(columns="index", inplace=True)
         if "subject_type" in meta.index:
@@ -142,7 +142,7 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
                 break
             framedur = round(dat.iloc[1]["Recording time"]-dat.iloc[0]["Recording time"], 2)
             if round(dat.iloc[j+1]["Recording time"]-dat.iloc[j]["Recording time"], 2) != framedur:
-                print("Subject "+str(i)+sub_type+": Strongly deviant frame duration, please check!")  
+                print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing!")  
                 err = True
                 break
         
