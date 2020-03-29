@@ -144,7 +144,7 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
                     break
                 framedur = round(dat.iloc[1]["Recording time"]-dat.iloc[0]["Recording time"], 2)
                 if round(dat.iloc[j+1]["Recording time"]-dat.iloc[j]["Recording time"], 2) != framedur:
-                    print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing in at least one subject's track!")  
+                    print("Subject "+str(i)+sub_type+" Warning: Some frames seem to be missing!")  
                     err = True
                     break
         
@@ -152,23 +152,23 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
             print("Warning: Data contains gaps or frame duration is flawed!")
         else:
             print("Data checked, all clear!")
-            dat = dat[['Trial time', 'X center', 'Y center']]
-            dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type] # Rename coordinate columns according to subject type
-            
-            if i == 0:
-                dat0 = dat
-            else:
-                ncount0 = len(dat0)
-                ncount = len(dat)
-                if ncount != ncount0:
-                    print("Warning: Number of recorded frames strongly diverge between subjects!") 
-                dat0 = pd.merge(dat0, dat, on="Trialtime")
+        dat = dat[['Trial time', 'X center', 'Y center']]
+        dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type] # Rename coordinate columns according to subject type
+        
+        if i == 0:
+            dat0 = dat
+        else:
+            ncount0 = len(dat0)
+            ncount = len(dat)
+            if ncount != ncount0:
+                print("Warning: Number of recorded frames strongly diverge between subjects!") 
+            dat0 = pd.merge(dat0, dat, on="Trialtime")
 
     # Add columns for additional IVs possibly written out in raw file         
     ud = meta.loc['User-defined Independent Variable':][1]
-    for i in range(1, len(ud)):
-        if str(meta.loc[ud.index[i]][1]) != "nan":
-            dat0[ud.index[i]] = meta.loc[ud.index[i]][1]
+    for k in range(1, len(ud)):
+        if str(meta.loc[ud.index[k]][1]) != "nan":
+            dat0[ud.index[k]] = meta.loc[ud.index[k]][1]
     dat0.drop("subject_type", axis=1, inplace=True)
                        
     return dat0, framedur
