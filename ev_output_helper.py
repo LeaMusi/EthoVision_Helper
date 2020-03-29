@@ -162,7 +162,7 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
             ncount = len(dat)
             if ncount != ncount0:
                 print("Warning: Number of recorded frames strongly diverge between subjects!") 
-            dat0 = pd.merge(dat0, dat, on="Trialtime")
+            dat0 = pd.merge(dat0, dat, on="Trialtime", how="outer")
 
     # Add columns for additional IVs possibly written out in raw file         
     ud = meta.loc['User-defined Independent Variable':][1]
