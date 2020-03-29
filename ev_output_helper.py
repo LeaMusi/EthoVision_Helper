@@ -66,6 +66,7 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
     '''
     import glob
     import numpy as np
+    import pandas as pd
     import os
     import scipy.signal as sgn
     
@@ -88,9 +89,11 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                         print("Warning: no tracking data in sheet " + str(sheet_no) + " of \n" + xlsfile + ".")
                         write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=True)
                     else:
+                        idxcol = coord["Trial time"]
                         coord.dropna(axis=0, subset=["X center", "Y center"], inplace=True)
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
                         coord["Y center"]=sgn.savgol_filter(np.array(coord["Y center"]), window_length=5, polyorder=3, deriv=0)
+                        coord = pd.merge(idxcol, coord, on="Trial time", how="outer")
                         write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=True)
 
 #%%
