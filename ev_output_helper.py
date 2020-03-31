@@ -55,12 +55,14 @@ def write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed):
     
 #%%
 def framewise_velocity(xseries, yseries):
-    ''' Computes, on a frame-by-frame basis, the distance moved and the global direction relative to the positive x axis.
+    ''' Computes, on a frame-by-frame basis, the displacement vector, its magnitude (the distance moved) and its direction relative to the positive x axis.
         Parameters:
         xseries             - Series of x coordinates
         yseries             - Series of y coordinates
 
         Returns: 
+        dispx               - Displacement on the x axis
+        dispy               - Displacement on the y axis
         magnit              - Magnitude of velocity (i e distance moved)
         angle               - The global movement angle in radians (i e the absolute angle relative to the positive x axis)
     '''
@@ -68,13 +70,16 @@ def framewise_velocity(xseries, yseries):
     magnit = list([0])
     angle = list([0])
     for i in range(1, len(xseries)):
+        # Compute displacement vector in this frame
+        dispx = xseries[i]-xseries[i-1]
+        dispy = yseries[i]-yseries[i-1]
         # Compute distance traveled in this frame
-        dist = math.sqrt((xseries[i]-xseries[i-1])**2 + (yseries[i]-yseries[i-1])**2)
+        dist = math.sqrt((dispx)**2 + (dispy)**2)
         magnit.append(dist)
         # Compute global movement angle in this frame
-        ang = math.atan2((yseries[i]-yseries[i-1]), (xseries[i]-xseries[i-1]))
+        ang = math.atan2(dispy, dispx)
         angle.append(ang)
-    return magnit, angle  
+    return dispx, dispy, magnit, angle  
 
 #%%
 def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subjects_per_trial):
@@ -106,7 +111,9 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                 coord, metadata=read_tracks_excel(xlsfile, header_rows, sheet_no)
                 outpath = rawfilepath+"preprocessed_tracks/"
                 if extract_all_unsmoothed:
-                    magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                    dispx, dispy, magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                    coord["displacement_x"] = dispx
+                    coord["displacement_y"] = dispy
                     coord["distance_moved"] = magnit
                     coord["global_angle"] = angle
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
@@ -120,7 +127,9 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
                         coord["Y center"]=sgn.savgol_filter(np.array(coord["Y center"]), window_length=5, polyorder=3, deriv=0)
                         coord = pd.merge(idxcol, coord, on="Trial time", how="outer")
-                        magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                        dispx, dispy, magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                        coord["displacement_x"] = dispx
+                        coord["displacement_y"] = dispy
                         coord["distance_moved"] = magnit
                         coord["global_angle"] = angle
                         write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=True)
@@ -184,8 +193,8 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
             print("Warning: Data contains gaps or frame duration is flawed!")
         else:
             print("Data checked, all clear!")
-        dat = dat[['Trial time', 'X center', 'Y center', 'distance_moved', 'global_angle']]
-        dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type, 'distance_moved'+sub_type, 'global_angle'+sub_type] # Rename coordinate columns according to subject type
+        dat = dat[['Trial time', 'X center', 'Y center', 'displacement_x', 'displacement_y', 'distance_moved', 'global_angle']]
+        dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type, 'displacement_x_'+sub_type, 'displacement_y_'+sub_type, 'distance_moved_'+sub_type, 'global_angle_'+sub_type] # Rename coordinate columns according to subject type
         
         if i == 0:
             dat0 = dat
