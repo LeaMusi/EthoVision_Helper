@@ -69,10 +69,14 @@ def framewise_velocity(xseries, yseries):
     import math
     magnit = list([0])
     angle = list([0])
+    dispx = list([0])
+    dispy = list([0])
     for i in range(1, len(xseries)):
         # Compute displacement vector in this frame
-        dispx = xseries[i]-xseries[i-1]
-        dispy = yseries[i]-yseries[i-1]
+        disp_x = xseries[i]-xseries[i-1]
+        dispx.append(disp_x)
+        disp_y = yseries[i]-yseries[i-1]
+        dispy.append(disp_y)
         # Compute distance traveled in this frame
         dist = math.sqrt((dispx)**2 + (dispy)**2)
         magnit.append(dist)
