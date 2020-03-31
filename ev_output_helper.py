@@ -52,6 +52,29 @@ def write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed):
         outmetafile = outpath+"meta_"+xlsfile.split("/")[-1].split(".")[-2]+"sheet_"+str(sheet_no)+".csv"
     coord.to_csv(outcsvfile, header=True, index=False, float_format="%.5f",sep="\t")
     metadata.to_csv(outmetafile, header=False, index=False, float_format="%.5f",sep="\t")
+    
+#%%
+def framewise_velocity(xseries, yseries):
+    ''' Computes, on a frame-by-frame basis, the distance moved and the global direction relative to the positive x axis.
+        Parameters:
+        xseries             - Series of x coordinates
+        yseries             - Series of y coordinates
+
+        Returns: 
+        magnit              - Magnitude of velocity (i e distance moved)
+        angle               - The global movement angle in radians (i e the absolute angle relative to the positive x axis)
+    '''
+    import math
+    magnit = list([0])
+    angle = list([0])
+    for i in range(1, len(xseries)):
+        # Compute distance traveled in this frame
+        dist = math.sqrt((xseries[i]-xseries[i-1])**2 + (yseries[i]-yseries[i-1])**2)
+        magnit.append(dist)
+        # Compute global movement angle in this frame
+        ang = math.atan2((yseries[i]-yseries[i-1]), (xseries[i]-xseries[i-1]))
+        angle.append(ang)
+    return magnit, angle  
 
 #%%
 def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subjects_per_trial):
@@ -82,7 +105,10 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                 #print(xlsfile)
                 coord, metadata=read_tracks_excel(xlsfile, header_rows, sheet_no)
                 outpath = rawfilepath+"preprocessed_tracks/"
-                if extract_all_unsmoothed:    
+                if extract_all_unsmoothed:
+                    magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                    coord["distance_moved"] = magnit
+                    coord["global_angle"] = angle
                     write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=False)
                 if smoothe_all:  
                     if sum(coord["X center"].isna()) == len(coord):
@@ -94,6 +120,9 @@ def data_preprocessing(rawfilepath, smoothe_all, extract_all_unsmoothed, subject
                         coord["X center"]=sgn.savgol_filter(np.array(coord["X center"]), window_length=5, polyorder=3, deriv=0)
                         coord["Y center"]=sgn.savgol_filter(np.array(coord["Y center"]), window_length=5, polyorder=3, deriv=0)
                         coord = pd.merge(idxcol, coord, on="Trial time", how="outer")
+                        magnit, angle = framewise_velocity(coord["X center"], coord["Y center"])
+                        coord["distance_moved"] = magnit
+                        coord["global_angle"] = angle
                         write_out_track(xlsfile, outpath, coord, metadata, sheet_no, smoothed=True)
 
 #%%
@@ -155,8 +184,8 @@ def data_initialization(rawfilepath, use_smoothed_data, trial_id, subjects_per_t
             print("Warning: Data contains gaps or frame duration is flawed!")
         else:
             print("Data checked, all clear!")
-        dat = dat[['Trial time', 'X center', 'Y center']]
-        dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type] # Rename coordinate columns according to subject type
+        dat = dat[['Trial time', 'X center', 'Y center', 'distance_moved', 'global_angle']]
+        dat.columns = ['Trialtime', 'X_'+sub_type, 'Y_'+sub_type, 'distance_moved'+sub_type, 'global_angle'+sub_type] # Rename coordinate columns according to subject type
         
         if i == 0:
             dat0 = dat
