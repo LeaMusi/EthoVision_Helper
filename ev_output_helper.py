@@ -78,10 +78,10 @@ def framewise_velocity(xseries, yseries):
         disp_y = yseries[i]-yseries[i-1]
         dispy.append(disp_y)
         # Compute distance traveled in this frame
-        dist = math.sqrt((dispx)**2 + (dispy)**2)
+        dist = math.sqrt((disp_x)**2 + (disp_y)**2)
         magnit.append(dist)
         # Compute global movement angle in this frame
-        ang = math.atan2(dispy, dispx)
+        ang = math.atan2(disp_y, disp_x)
         angle.append(ang)
     return dispx, dispy, magnit, angle  
 
